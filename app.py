@@ -118,6 +118,13 @@ if uploaded_file:
         if match:
             df.rename(columns={match: field}, inplace=True)
 
+    # Check for missing columns
+    required_cols = ["Short-Term Liabilities", "Long-Term Liabilities", "Owner's Equity", "Current Assets", "Revenue", "Net Profit"]
+    missing = [col for col in required_cols if col not in df.columns]
+    if missing:
+        st.error(f"❌ Missing required columns: {', '.join(missing)}. Please check your file and column names.")
+        st.stop()
+
     df = compute_ratios(df)
 
     industry = detect_industry(uploaded_file.name)
